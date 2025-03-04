@@ -49,20 +49,26 @@ app.get("/api/get-cloudinary-media", async(req, res) => {
             max_results: 20, // Limit the number of results to 20
         });
 
+        // Log the Cloudinary result for debugging
+        console.log('Cloudinary API Result:', result);
+
+        // Check if any resources were returned
+        if (!result.resources || result.resources.length === 0) {
+            return res.status(404).json({ error: "No media found in the specified folder." });
+        }
+
         // Map the Cloudinary response to a simplified media list with transformations
         const mediaFiles = result.resources.map((file) => {
             // Apply Cloudinary transformations directly on the server side
             const transformedUrl = cloudinary.url(file.public_id, {
-                width: 1200, // Apply width (or any other transformation you need)
-                height: 800,
-                crop: 'fill', // Crop mode to fit the image into the specified dimensions
-                quality: 'auto', // Automatically adjust quality based on image content
-                format: 'auto', // Automatically choose format (WebP for supported browsers, etc.)
+                quality: 'auto', // Automatically set quality
+                format: 'auto', // Automatically choose the best format (e.g., WebP, JPG)
             });
 
             return {
                 type: file.resource_type,
                 src: transformedUrl, // Use the transformed URL here
+                alt: file.public_id, // Optionally, use public_id as the alt text
             };
         });
 
