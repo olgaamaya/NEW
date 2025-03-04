@@ -16,8 +16,16 @@ cloudinary.config({
 // Initialize Express app
 const app = express();
 
+// CORS configuration (if you want to specify domains)
+// Allow only requests from your GitHub Pages domain
+const corsOptions = {
+    origin: 'https://olgaamaya.github.io', // Allow only this domain (adjust as needed)
+    methods: ['GET'], // Allow only GET requests
+    allowedHeaders: ['Content-Type'],
+};
+
 // Middleware to handle CORS
-app.use(cors());
+app.use(cors(corsOptions));
 
 // API Endpoint to fetch Cloudinary media based on the folder
 app.get("/api/get-cloudinary-media", async(req, res) => {
@@ -47,9 +55,9 @@ app.get("/api/get-cloudinary-media", async(req, res) => {
             const transformedUrl = cloudinary.url(file.public_id, {
                 width: 1200, // Apply width (or any other transformation you need)
                 height: 800,
-                crop: 'fill',
-                quality: 'auto',
-                format: 'auto', // Automatically choose format
+                crop: 'fill', // Crop mode to fit the image into the specified dimensions
+                quality: 'auto', // Automatically adjust quality based on image content
+                format: 'auto', // Automatically choose format (WebP for supported browsers, etc.)
             });
 
             return {
@@ -59,7 +67,7 @@ app.get("/api/get-cloudinary-media", async(req, res) => {
         });
 
         console.log('Fetched media files: ', mediaFiles);
-        res.json(mediaFiles); // Respond with the media files
+        res.json(mediaFiles); // Respond with the transformed media files
     } catch (error) {
         console.error("Error fetching Cloudinary media:", error);
         res.status(500).json({ error: "Failed to fetch media" });
