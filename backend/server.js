@@ -62,7 +62,6 @@ app.get("/api/get-cloudinary-media", async(req, res) => {
             // Apply Cloudinary transformations directly on the server side
             const transformedUrl = cloudinary.url(file.public_id, {
                 quality: 'auto', // Automatically set quality
-                format: 'auto', // Automatically choose the best format (e.g., WebP, JPG)
             });
 
             return {
