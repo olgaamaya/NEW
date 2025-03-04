@@ -1,5 +1,5 @@
 const express = require("express");
-const cors = require("cors"); // Import cors
+const cors = require("cors");
 const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
 
@@ -23,16 +23,18 @@ app.get("/api/get-cloudinary-media", async(req, res) => {
     try {
         const { folder } = req.query;
 
+        // Validate folder name
         if (!folder) {
             return res.status(400).json({ error: "Folder parameter is required" });
         }
 
-        // Log the folder name to ensure the correct folder is being used
-        console.log(`Fetching media from folder: ${folder}`);
+        // Ensure exact folder name by removing slashes and other characters
+        const sanitizedFolder = folder.trim().replace(/\//g, ''); // Remove any unwanted slashes
+        console.log(`Fetching media from folder: ${sanitizedFolder}`);
 
         const result = await cloudinary.api.resources({
             type: "upload",
-            prefix: `IMG/${folder}`, // Fetch media from the specified folder
+            folder: `IMG/${sanitizedFolder}`, // Use 'folder' instead of 'prefix'
             max_results: 20, // Limit the number of results
         });
 
