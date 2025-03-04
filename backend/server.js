@@ -6,8 +6,10 @@ require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// Enable CORS for all origins
-app.use(cors({ origin: "https://olgaamaya.github.io" }));
+// Enable CORS for multiple origins (allow both GitHub and local development)
+app.use(cors({
+    origin: ["https://olgaamaya.github.io", "http://127.0.0.1:5500"], // Allow both origins
+}));
 
 // Cloudinary configuration
 cloudinary.config({
