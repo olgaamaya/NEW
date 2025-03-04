@@ -41,11 +41,22 @@ app.get("/api/get-cloudinary-media", async(req, res) => {
             max_results: 20, // Limit the number of results to 20
         });
 
-        // Map the Cloudinary response to a simplified media list
-        const mediaFiles = result.resources.map((file) => ({
-            type: file.resource_type,
-            src: file.secure_url,
-        }));
+        // Map the Cloudinary response to a simplified media list with transformations
+        const mediaFiles = result.resources.map((file) => {
+            // Apply Cloudinary transformations directly on the server side
+            const transformedUrl = cloudinary.url(file.public_id, {
+                width: 1200, // Apply width (or any other transformation you need)
+                height: 800,
+                crop: 'fill',
+                quality: 'auto',
+                format: 'auto', // Automatically choose format
+            });
+
+            return {
+                type: file.resource_type,
+                src: transformedUrl, // Use the transformed URL here
+            };
+        });
 
         console.log('Fetched media files: ', mediaFiles);
         res.json(mediaFiles); // Respond with the media files
