@@ -27,10 +27,13 @@ app.get("/api/get-cloudinary-media", async(req, res) => {
             return res.status(400).json({ error: "Folder parameter is required" });
         }
 
+        // Log the folder name to ensure the correct folder is being used
+        console.log(`Fetching media from folder: ${folder}`);
+
         const result = await cloudinary.api.resources({
             type: "upload",
-            prefix: `IMG/${folder}`,
-            max_results: 20, // Limit results
+            prefix: `IMG/${folder}`, // Fetch media from the specified folder
+            max_results: 20, // Limit the number of results
         });
 
         const mediaFiles = result.resources.map((file) => ({
@@ -38,7 +41,7 @@ app.get("/api/get-cloudinary-media", async(req, res) => {
             src: file.secure_url,
         }));
 
-        res.json(mediaFiles);
+        res.json(mediaFiles); // Send the media files as a JSON response
     } catch (error) {
         console.error("Error fetching Cloudinary media:", error);
         res.status(500).json({ error: "Failed to fetch media" });
