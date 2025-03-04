@@ -25,16 +25,13 @@ fs.readFile(inputPath, 'utf-8', (err, data) => {
     // Iterate over each figure element
     $('figure').each((index, figure) => {
         const picture = $(figure).find('picture');
+
         if (picture.length) {
             let source = picture.find('source');
 
             if (source.length) {
-                // Modify existing source tag
-                source.attr('srcset', 'https://res.cloudinary.com/doggr8zar/image/upload/v1741089156/IMG/coverimg/te_quiero_un_poco_cover_2.jpg 800w, https://res.cloudinary.com/doggr8zar/image/upload/v1741089156/IMG/coverimg/te_quiero_un_poco_cover_2.jpg 1600w');
+                // Add the sizes attribute without changing the srcset
                 source.attr('sizes', '(max-width: 800px) 800px, 1600px');
-            } else {
-                // Create a new source tag if it doesn't exist
-                picture.prepend('<source srcset="https://res.cloudinary.com/doggr8zar/image/upload/v1741089156/IMG/coverimg/te_quiero_un_poco_cover_2.jpg 800w, https://res.cloudinary.com/doggr8zar/image/upload/v1741089156/IMG/coverimg/te_quiero_un_poco_cover_2.jpg 1600w" sizes="(max-width: 800px) 800px, 1600px" />');
             }
         }
     });
