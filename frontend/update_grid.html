@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Grid Rows from External CSS</title>
+</head>
+
+<body>
+    <h1 id="headline">Automatic Grid Row Updater from External CSS</h1>
+    <pre id="output"></pre>
+
+    <script>
+        // Define the numbers to modify grid-row and nth-child selectors
+        let rowIncrement = 10; // Modify grid-row values
+        let F = 20; // Modify nth-child numbers
+
+        // Function to update the headline with current variable values
+        function updateHeadline() {
+            document.getElementById('headline').textContent = `Automatic Grid Row Updater from External CSS (rowIncrement: ${rowIncrement}, F: ${F})`;
+        }
+
+        // Function to fetch the external CSS file from the URL
+        function fetchCSS() {
+            fetch('https://olgaamaya.com/CSS/index_layout.css')
+                .then(response => response.text())
+                .then(css => {
+                    // Update the grid-row values and nth-child selectors
+                    let updatedCSS = updateGridRow(css, rowIncrement);
+                    updatedCSS = updateNthChild(updatedCSS, F);
+
+                    // Update the headline dynamically
+                    updateHeadline();
+
+                    // Output the updated CSS to the page
+                    document.getElementById('output').textContent = updatedCSS;
+                })
+                .catch(error => {
+                    console.error('Error loading CSS file:', error);
+                });
+        }
+
+        // Function to add a number to grid-row in CSS content
+        function updateGridRow(cssContent, addNumber) {
+            const regex = /grid-row:\s*(\d+)\/(\d+)/g;
+            return cssContent.replace(regex, (match, start, end) => {
+                const updatedStart = parseInt(start, 10) + addNumber;
+                const updatedEnd = parseInt(end, 10) + addNumber;
+                return `grid-row: ${updatedStart}/${updatedEnd}`;
+            });
+        }
+
+        // Function to modify nth-child numbers in "figure.project-index:nth-child()"
+        function updateNthChild(cssContent, F) {
+            const regex = /figure\.project-index:nth-child\((\d+)\)/g;
+            return cssContent.replace(regex, (match, number) => {
+                const updatedNumber = parseInt(number, 10) + F;
+                return `figure.project-index:nth-child(${updatedNumber})`;
+            });
+        }
+
+        // Call fetchCSS to load and update the CSS when the page loads
+        window.onload = fetchCSS;
+    </script>
+</body>
+
+</html>
