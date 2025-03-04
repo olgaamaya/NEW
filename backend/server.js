@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 
 // Enable CORS for all origins
-app.use(cors());
+app.use(cors({ origin: "https://olgaamaya.github.io" }));
 
 // Cloudinary configuration
 cloudinary.config({
