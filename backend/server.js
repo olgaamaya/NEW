@@ -16,12 +16,19 @@ cloudinary.config({
 // Initialize Express app
 const app = express();
 
-// CORS configuration (if you want to specify domains)
-// Allow only requests from your GitHub Pages domain
+// CORS configuration
 const corsOptions = {
-    origin: 'https://olgaamaya.github.io', // Allow only this domain (adjust as needed)
-    methods: ['GET'], // Allow only GET requests
-    allowedHeaders: ['Content-Type'],
+    origin: function(origin, callback) {
+        // Allow only the GitHub Pages domain (or others you specify)
+        if (!origin || origin === 'https://olgaamaya.github.io') {
+            callback(null, true);
+        } else {
+            callback(new Error('CORS policy: Not allowed by CORS policy'), false);
+        }
+    },
+    methods: ['GET', 'POST'], // Allow GET and POST methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Allow Content-Type and Authorization headers
+    credentials: true, // Allow credentials (like cookies, if needed)
 };
 
 // Middleware to handle CORS
