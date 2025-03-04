@@ -19,6 +19,9 @@ const app = express();
 // CORS configuration
 const corsOptions = {
     origin: function(origin, callback) {
+        // Uncomment the line below to allow all origins temporarily for debugging
+        // callback(null, true);
+
         if (!origin || origin === 'https://olgaamaya.github.io') {
             callback(null, true);
         } else {
@@ -59,7 +62,7 @@ app.get("/api/get-cloudinary-media", async(req, res) => {
         });
 
         if (!result.resources || result.resources.length === 0) {
-            return res.status(404).json({ error: "No media found in the specified folder." });
+            return res.status(404).json({ error: `No media found in the folder: ${sanitizedFolder}` });
         }
 
         // Map the Cloudinary response to a structured list
